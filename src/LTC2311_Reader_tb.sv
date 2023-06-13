@@ -4,6 +4,8 @@ module LTC2311_Reader_tb;
   reg reset_n;
   reg clk;
   reg read;
+  reg sleep;
+  reg wake;
   
   // Outputs
   wire [15:0] data_out;
@@ -21,6 +23,8 @@ module LTC2311_Reader_tb;
     .reset_n(reset_n),
     .clk(clk),
     .read(read),
+    .sleep(sleep),
+    .wake(wake),
     .data_out(data_out),
     .data_valid(data_valid),
     .busy(busy),

@@ -1,7 +1,7 @@
 module LTC2311_Reader(
     // Module ports
     input logic reset_n, clk,
-    input logic read,
+    input logic read, sleep, wake,
     output logic [15:0] data_out,
     output logic data_valid, busy,
     // IC ports
