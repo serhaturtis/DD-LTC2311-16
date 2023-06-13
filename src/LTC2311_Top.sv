@@ -71,7 +71,7 @@ LTC2311_Reader reader(
     );
 
 // FIFO
-synchronous_fifo #(16, 4) dut (
+synchronous_fifo #(16, 4) fifo (
     .write_increment(fifo_write_enable_s),
     .read_increment(fifo_read_enable),
     .clock(clk),
@@ -101,37 +101,48 @@ end
 
 // Control register logic
 always_ff @(posedge clk, negedge reset_n) begin
-    reader_sleep_s <= 0;
-    reader_wake_s <= 0;
-    fifo_clear_s <= 0;
-    reader_read_single_v <= 0;
-
-    if(control_register_in[CONTROL_REG_SLEEP_BIT] == 1'b1) begin
-        reader_sleep_v <= 1'b1;
-        reader_sleep_s <= 1'b1;
-    end
-    else if (control_register_in[CONTROL_REG_WAKE_BIT] == 1'b1) begin
-        reader_sleep_v <= 0;
-        reader_wake_s <= 1'b1;
-    end
-    else if (control_register_in[CONTROL_REG_CONTINOUS_MODE_ENABLE_BIT] == 1'b1) begin
-        reader_continuous_v <= 1'b1;
-    end
-    else if (control_register_in[CONTROL_REG_CONTINOUS_MODE_DISABLE_BIT] == 1'b1) begin
-        reader_continuous_v <= 0;
-    end
-    else if (control_register_in[CONTROL_REG_CLEAR_FIFO_BIT] == 1'b1) begin
-        fifo_clear_s <= 1'b1;
-    end
-    else if (control_register_in[CONTROL_REG_READ_ADC_BIT] == 1'b1) begin
-        reader_read_single_v <= 1'b1;
+    if(reset_n == 1'b0) begin
+    	reader_sleep_v <= 0;
+    	reader_sleep_s <= 0;
+    	reader_wake_s <= 0;
+    	fifo_clear_s <= 0;
+    	reader_read_single_v <= 0;
+    	reader_continuous_v <= 0;
     end
     else begin
-        reader_sleep_s <= 0;
-        reader_wake_s <= 0;
-        fifo_clear_s <= 0;
-        reader_read_single_v <= 0;
+    	reader_sleep_s <= 0;
+    	reader_wake_s <= 0;
+    	fifo_clear_s <= 0;
+    	reader_read_single_v <= 0;
+
+    	if(control_register_in[CONTROL_REG_SLEEP_BIT] == 1'b1) begin
+    	    reader_sleep_v <= 1'b1;
+    	    reader_sleep_s <= 1'b1;
+    	end
+    	else if (control_register_in[CONTROL_REG_WAKE_BIT] == 1'b1) begin
+    	    reader_sleep_v <= 0;
+    	    reader_wake_s <= 1'b1;
+    	end
+    	else if (control_register_in[CONTROL_REG_CONTINOUS_MODE_ENABLE_BIT] == 1'b1) begin
+    	    reader_continuous_v <= 1'b1;
+    	end
+    	else if (control_register_in[CONTROL_REG_CONTINOUS_MODE_DISABLE_BIT] == 1'b1) begin
+    	    reader_continuous_v <= 0;
+    	end
+    	else if (control_register_in[CONTROL_REG_CLEAR_FIFO_BIT] == 1'b1) begin
+    	    fifo_clear_s <= 1'b1;
+    	end
+    	else if (control_register_in[CONTROL_REG_READ_ADC_BIT] == 1'b1) begin
+    	    reader_read_single_v <= 1'b1;
+    	end
+    	else begin
+    	    reader_sleep_s <= 0;
+    	    reader_wake_s <= 0;
+     	   fifo_clear_s <= 0;
+     	   reader_read_single_v <= 0;
+    	end
     end
+    
 
 end
 

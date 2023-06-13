@@ -19,7 +19,7 @@ logic [1:0] convert_counter = 0;
 logic [5:0] read_counter = 0;
 
 // State change logic
-always_ff @(posedge clk, posedge reset_n) begin
+always_ff @(posedge clk, negedge reset_n) begin
     if (reset_n == 1'b0) begin
         state_reg <= IDLE_STATE;
     end
@@ -70,7 +70,7 @@ always_comb begin
     end
 end
 
-always_ff @(posedge clk, posedge reset_n) begin
+always_ff @(posedge clk, negedge reset_n) begin
     if (reset_n == 1'b0) begin
         convert_counter <= 0;
         read_counter <= 0;
